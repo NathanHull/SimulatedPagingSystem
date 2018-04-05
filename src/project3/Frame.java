@@ -4,6 +4,7 @@ public class Frame {
 	private String pid;
 	private String type;
 	private int page;
+	private int frame;
 	private int size;
 	
 	/**
@@ -43,6 +44,18 @@ public class Frame {
 		this.page = page;
 	}
 	/**
+	 * @return the frame
+	 */
+	public int getFrame() {
+		return frame;
+	}
+	/**
+	 * @param page the page to set
+	 */
+	public void setFrame(int frame) {
+		this.frame = frame;
+	}
+	/**
 	 * @return the size
 	 */
 	public int getSize() {
@@ -65,6 +78,8 @@ public class Frame {
 		result.append(type);
 		result.append(": Page ");
 		result.append(page);
+		result.append(" Frame: ");
+		result.append(frame);
 		
 		return result.toString();
 	}

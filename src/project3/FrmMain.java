@@ -26,7 +26,7 @@ import javax.swing.JFormattedTextField;
 public class FrmMain extends JFrame {
 	
 	// Reference to Controller singleton
-	final Controller controller = Controller.getInstance();
+	final Controller controller;
 
 	public JPanel contentPane;
 	public JLabel lblLastLineRead;
@@ -57,7 +57,7 @@ public class FrmMain extends JFrame {
 	 */
 	public FrmMain() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 648, 359);
+		setBounds(100, 100, 848, 359);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -65,6 +65,8 @@ public class FrmMain extends JFrame {
 		
 		// For selecting input file
 		final JFileChooser fc = new JFileChooser();
+		
+		controller = Controller.getInstance();
 		
 		JLabel lblInputFileTitle = new JLabel("Input File: ");
 		lblInputFileTitle.setBounds(149, 21, 67, 16);
@@ -126,9 +128,10 @@ public class FrmMain extends JFrame {
 		}
 		
 		JScrollPane spProcessMemory = new JScrollPane();
-		spProcessMemory.setBounds(16, 129, 300, 148);
+		spProcessMemory.setBounds(16, 129, 400, 148);
 		JTable tblProcessMemory = new JTable(processData, processColumnNames);
 		tblProcessMemory.setGridColor(Color.BLACK);
+		tblProcessMemory.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		spProcessMemory.setViewportView(tblProcessMemory);
 		contentPane.add(spProcessMemory);
 		
@@ -146,19 +149,19 @@ public class FrmMain extends JFrame {
 		for (int x = 0; x < physicalData.length; x++) {
 			physicalData[x][0] = "" + x;
 			physicalData[x][1] = "";
-			System.out.println("" + x);
 		}
 		
 		JScrollPane spPhysicalMemory = new JScrollPane();
-		spPhysicalMemory.setBounds(336, 129, 300, 148);
+		spPhysicalMemory.setBounds(436, 129, 400, 148);
 		JTable tblPhysicalMemory = new JTable(physicalData, physicalColumnNames);
 		tblPhysicalMemory.setGridColor(Color.BLACK);
+		tblPhysicalMemory.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		spPhysicalMemory.setViewportView(tblPhysicalMemory);
 		contentPane.add(spPhysicalMemory);
 		
 		JLabel lblPhysicalMemory = new JLabel("Physical Memory");		
 		lblPhysicalMemory.setFont(new Font("Lucida Grande", Font.BOLD, 15));
-		lblPhysicalMemory.setBounds(336, 104, 147, 16);
+		lblPhysicalMemory.setBounds(436, 104, 147, 16);
 		contentPane.add(lblPhysicalMemory);
 		
 		JLabel lblPS = new JLabel("* Free Frames");

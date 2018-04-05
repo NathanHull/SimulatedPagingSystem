@@ -58,23 +58,17 @@ public final class Controller {
 	 */
     private static void createAndShowGUI() {
         // Create and display window.
-//        try {
-//			SwingUtilities.invokeAndWait(new Runnable() {
-//				@Override
-//				public void run() {
-//					try {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					try {
 						frmMain = new FrmMain();
 						frmMain.setVisible(true);
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//				}
-//			});
-//		} catch (InvocationTargetException e) {
-//			e.printStackTrace();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
     }
     
     /*
@@ -193,6 +187,7 @@ public final class Controller {
 				for (int x = 0; x < physicalMemory.length; x++) {
 					if (physicalMemory[x] == null) {
 						physicalMemory[x] = pcb.getPageTable().get(pagesAdded);
+						pcb.getPageTable().get(pagesAdded).setFrame(x);
 						pagesAdded++;
 						if (pagesAdded >= pcb.getPageTableSize())
 							break;
@@ -201,8 +196,18 @@ public final class Controller {
 				
 				// If not all pages have been added...
 				while (pagesAdded < pcb.getPageTableSize()) {
-					int freeFrame =	freeFrameList.poll();
+					Integer freeFrame =	freeFrameList.poll();
+					if (freeFrame == null) {
+						JOptionPane.showMessageDialog(frmMain, "Physical Memory Overflow.");						
+						while (pagesAdded < pcb.getPageTableSize()) {
+							pcb.getPageTable().get(pagesAdded).setFrame(-1);
+							pagesAdded++;
+						}
+						frmMain.updateTables(physicalMemory, freeFrameList, pcb);
+						return;
+					}
 					physicalMemory[freeFrame] = pcb.getPageTable().get(pagesAdded);
+					pcb.getPageTable().get(pagesAdded).setFrame(freeFrame);
 					pagesAdded++;
 				}
 			}
@@ -216,11 +221,15 @@ public final class Controller {
     
     public void changeDimensions(int pm, int fs) {
     	System.out.println("CHANGING DIMENSIONS");
-    	INSTANCE.PHYSICAL_MEMORY_BYTES = pm;
-    	INSTANCE.FRAME_SIZE_BYTES = fs;
+    	PHYSICAL_MEMORY_BYTES = pm;
+    	FRAME_SIZE_BYTES = fs;
+    	NUMBER_OF_PAGES = pm/fs;
     	System.out.println("New PM: " + PHYSICAL_MEMORY_BYTES);
     	System.out.println("New fs: " + FRAME_SIZE_BYTES);
     	System.out.println("New page: " + NUMBER_OF_PAGES);
+    	
+    	freeFrameList = new LinkedList<>();
+    	physicalMemory = new Frame[INSTANCE.NUMBER_OF_PAGES];
     	
     	frmMain.dispose();
     	createAndShowGUI();
