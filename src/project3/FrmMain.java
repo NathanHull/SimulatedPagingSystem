@@ -21,15 +21,19 @@ import java.util.Queue;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import java.awt.Font;
+import javax.swing.JFormattedTextField;
 
 public class FrmMain extends JFrame {
+	
+	// Reference to Controller singleton
+	final Controller controller = Controller.getInstance();
 
 	public JPanel contentPane;
 	public JLabel lblLastLineRead;
 	public JLabel lblProcessMemory;
 
-	String physicalData[][] = { {"0", ""}, {"1", ""}, {"2", ""}, {"3", ""}, {"4", ""}, {"5", ""}, {"6", ""}, {"7", ""} };
-	String processData[][] = { {"0", ""}, {"1", ""}, {"2", ""}, {"3", ""}, {"4", ""}, {"5", ""}, {"6", ""}, {"7", ""} };
+	String physicalData[][];
+	String processData[][];
 
 	
 	/**
@@ -61,9 +65,6 @@ public class FrmMain extends JFrame {
 		
 		// For selecting input file
 		final JFileChooser fc = new JFileChooser();
-		
-		// Reference to Controller singleton
-		final Controller controller = Controller.getInstance();
 		
 		JLabel lblInputFileTitle = new JLabel("Input File: ");
 		lblInputFileTitle.setBounds(149, 21, 67, 16);
@@ -117,8 +118,12 @@ public class FrmMain extends JFrame {
 		// https://www.eclipse.org/forums/index.php/t/273408/
 		String processColumnNames[] = {"Page #", "Data"};
 
-		// Initialized globally so it can be changed from controller
-		// processData = { {"0", ""}, {"1", ""}, {"2", ""}, {"3", ""}, {"4", ""}, {"5", ""}, {"6", ""}, {"7", ""} };
+		// Data initalized globally so it can be changed from controller
+		processData = new String[controller.NUMBER_OF_PAGES][2];
+		for (int x = 0; x < processData.length; x++) {
+			processData[x][0] = "" + x;
+			processData[x][1] = "";
+		}
 		
 		JScrollPane spProcessMemory = new JScrollPane();
 		spProcessMemory.setBounds(16, 129, 300, 148);
@@ -136,8 +141,13 @@ public class FrmMain extends JFrame {
 		// ====== PHYSICAL TABLE REPRESENTATION ======
 		String physicalColumnNames[] = {"Frame #", "Data"};
 		
-		// Initialized globally so it can be changed from controller
-		// physicalData = { {"0", ""}, {"1", ""}, {"2", ""}, {"3", ""}, {"4", ""}, {"5", ""}, {"6", ""}, {"7", ""} };
+		// Data initialized globally so it can be changed from controller
+		physicalData = new String[controller.NUMBER_OF_PAGES][2];
+		for (int x = 0; x < physicalData.length; x++) {
+			physicalData[x][0] = "" + x;
+			physicalData[x][1] = "";
+			System.out.println("" + x);
+		}
 		
 		JScrollPane spPhysicalMemory = new JScrollPane();
 		spPhysicalMemory.setBounds(336, 129, 300, 148);
@@ -154,6 +164,35 @@ public class FrmMain extends JFrame {
 		JLabel lblPS = new JLabel("* Free Frames");
 		lblPS.setBounds(551, 297, 85, 16);
 		contentPane.add(lblPS);
+		
+		JFormattedTextField txtPM = new JFormattedTextField();
+		txtPM.setText("" + controller.PHYSICAL_MEMORY_BYTES);
+		txtPM.setBounds(569, 16, 67, 26);
+		contentPane.add(txtPM);
+		
+		JLabel lblPM = new JLabel("Physical M (bytes): ");
+		lblPM.setBounds(448, 21, 122, 16);
+		contentPane.add(lblPM);
+		
+		JLabel lblFrameSize = new JLabel("Frame Size (bytes): ");
+		lblFrameSize.setBounds(448, 52, 122, 16);
+		contentPane.add(lblFrameSize);
+		
+		JFormattedTextField txtFrameSize = new JFormattedTextField();
+		txtFrameSize.setText("" + controller.FRAME_SIZE_BYTES);
+		txtFrameSize.setBounds(569, 47, 67, 26);
+		contentPane.add(txtFrameSize);
+		
+		JButton btnSubmit = new JButton("Submit");
+		btnSubmit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.changeDimensions(Integer.parseInt(txtPM.getText()), Integer.parseInt(txtFrameSize.getText()));
+			}
+		});
+		btnSubmit.setBounds(525, 80, 117, 29);
+		contentPane.add(btnSubmit);
+		
+		contentPane.repaint();
 	}
 	
 	public void updateTables(Frame physicalMemory[], Queue<Integer> freeFrameList, ProcessControlBlock pcb) {
@@ -185,6 +224,8 @@ public class FrmMain extends JFrame {
 					physicalData[x][1] = physicalMemory[x].toString();
 			}
 		}
+		
+		contentPane.repaint();
 	}
 	
 	public void setLastLineReadText(String s) {
