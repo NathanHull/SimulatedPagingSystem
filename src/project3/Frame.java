@@ -1,21 +1,21 @@
 package project3;
 
 public class Frame {
-	private int pid;
+	private String pid;
 	private String type;
 	private int page;
 	private int size;
 	
 	/**
-	 * @return the process
+	 * @return the pid
 	 */
-	public int getPid() {
+	public String getPid() {
 		return pid;
 	}
 	/**
-	 * @param process the process to set
+	 * @param pid the pid to set
 	 */
-	public void setProcess(int pid) {
+	public void setPid(String pid) {
 		this.pid = pid;
 	}
 	/**
@@ -54,6 +54,18 @@ public class Frame {
 	public void setSize(int size) {
 		this.size = size;
 	}
-	
-	
+	/**
+	 * @return string format of Frame
+	 */
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("Process ");
+		result.append(pid);
+		result.append(" ");
+		result.append(type);
+		result.append(": Page ");
+		result.append(page);
+		
+		return result.toString();
+	}
 }

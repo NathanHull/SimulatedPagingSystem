@@ -1,33 +1,43 @@
 package project3;
 
+import java.util.ArrayList;
+
 public class ProcessControlBlock {
-	private int pid;
-	private Frame pageTable[];
+	private String pid;
+	private ArrayList<Frame> pageTable = new ArrayList<>();
 	private int length;
+
+	public ProcessControlBlock() {}
 	
 	/**
 	 * @return the pid
 	 */
-	public int getPid() {
+	public String getPid() {
 		return pid;
 	}
 	/**
 	 * @param pid the pid to set
 	 */
-	public void setPid(int pid) {
+	public void setPid(String pid) {
 		this.pid = pid;
 	}
 	/**
 	 * @return the pageTable
 	 */
-	public Frame[] getPageTable() {
+	public ArrayList<Frame> getPageTable() {
 		return pageTable;
 	}
 	/**
 	 * @param pageTable the pageTable to set
 	 */
-	public void setPageTable(Frame[] pageTable) {
+	public void setPageTable(ArrayList<Frame> pageTable) {
 		this.pageTable = pageTable;
+	}
+	/**
+	 * @return pageTable size
+	 */
+	public int getPageTableSize() {
+		return pageTable.size();
 	}
 	/**
 	 * @return the length
@@ -42,5 +52,12 @@ public class ProcessControlBlock {
 		this.length = length;
 	}
 	
-	
+	/**
+	 * Helper method to easily add frames to page table
+	 * 
+	 * @param frame the frame to add to the page table
+	 */
+	public void appendFrame(Frame frame) {
+		pageTable.add(frame);
+	}
 }
